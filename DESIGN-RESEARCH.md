@@ -4,7 +4,7 @@
 
 The supplied reference is the primary art direction: black glass architecture, warm metallic light, an oversized V, restrained uppercase typography, fine dividing lines, and project-specific amber, blue, violet, and mint accents. This site implements that direction with freshly written code and original imagery.
 
-The design is a cinematic editorial portfolio. Project categories filter instantly, individual projects open in accessible deep-linkable detail views, and journal cards open complete field notes. All site assets are served by GitHub Pages itself.
+The revised design is a futuristic invention command interface: a cyan-lit sculptural V core, metallic panel edges, technical typography, a functional four-system selector, and a compact project directory. The user requested a much stronger advanced-inventor / Tony Stark-like direction after reviewing the initial version. Original artwork was generated specifically for this revision. Project categories filter instantly, individual projects open in accessible deep-linkable detail views, and journal cards open complete field notes. All site assets are served by GitHub Pages itself.
 
 ## Sources reviewed
 
@@ -15,6 +15,6 @@ The design is a cinematic editorial portfolio. Project categories filter instant
 
 ## Hardware considerations
 
-A compressed architectural still provides the scene's visual complexity. A short, finite image entrance replaces real-time 3D rendering. Content reveals stop after one entrance. There is no autoplay video, WebGL scene, pointer-tracking loop, synthetic cursor, scroll hijacking, or recurring JavaScript timer.
+A compressed futuristic laboratory still provides the scene's visual complexity. A short, finite image entrance replaces real-time 3D rendering. A scan line crosses the hero once and content reveals stop after one entrance. System selection triggers a 240 ms panel transition only on interaction. There is no autoplay video, WebGL scene, pointer-tracking loop, synthetic cursor, scroll hijacking, or recurring JavaScript timer.
 
 Performance results in `QA.md` are local browser checks, not measurements of real visitor devices. Different network and hardware conditions can produce different results.

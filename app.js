@@ -35,7 +35,7 @@ const projects = {
   electra: { name:'ELECTRA', kind:'Software', subtitle:'Commerce & repair systems', image:'workbench.webp', color:'#e6b377', description:'A connected approach to the everyday complexity of electronics businesses. Bring the counter, the workbench, and the stockroom into one understandable system.', features:[['Inventory that stays connected','A single view of parts, products, and stock movements, designed around the realities of repair work.'],['Repair workflows with context','Track a device from intake and diagnosis through parts, service, and handover. Keep the history with the job.'],['Operations made visible','Connect customer context, repair status, and commercial activity so the next action is clear.']] },
   kubera: { name:'KUBERA', kind:'Quantitative research', subtitle:'Autonomous trading & capital allocation', image:null, color:'#8bceee', description:'A research direction exploring the full path from a market hypothesis to a measurable strategy, with risk constraints at the centre of every decision.', features:[['Research before execution','Define the hypothesis, data assumptions, and evaluation criteria before considering a live strategy.'],['Risk as a system constraint','Explore allocation limits, exposure controls, and explicit conditions for stopping a strategy.'],['Repeatable evaluation','Compare backtests, account for trading costs, and investigate how strategies respond when conditions change.']] },
   kaylan: { name:'KAYLAN', kind:'Intelligent systems', subtitle:'Personal AI director', image:'compute.webp', color:'#d7a3f3', description:'An exploration of AI that can turn intent into a coherent plan. Specialized roles, shared context, and human oversight form the foundation.', features:[['A clear chain of responsibility','Separate planning, coordination, and execution into understandable roles with explicit handoffs.'],['Memory with purpose','Keep relevant context accessible while making decisions and their supporting information traceable.'],['Oversight at the right moment','Define action boundaries, verify results, and bring consequential decisions back to the person in control.']] },
-  labs: { name:'VAYNE LABS', kind:'Experimental R&D', subtitle:'A space for the unproven', image:'atrium.webp', color:'#a1d7c7', description:'Some ideas need room before they need a roadmap. Vayne Labs is the space for early experiments, unfamiliar domains, and questions worth testing.', features:[['Small, focused prototypes','Build enough to test a technical assumption and reveal the next useful question.'],['New intersections','Explore what becomes possible when software, physical systems, and research meet.'],['Long-term curiosity','Document findings, keep useful components, and let evidence determine which ideas deserve to grow.']] }
+  labs: { name:'VAYNE LABS', kind:'Experimental R&D', subtitle:'A space for the unproven', image:'command-core.webp', color:'#a1d7c7', description:'Some ideas need room before they need a roadmap. Vayne Labs is the space for early experiments, unfamiliar domains, and questions worth testing.', features:[['Small, focused prototypes','Build enough to test a technical assumption and reveal the next useful question.'],['New intersections','Explore what becomes possible when software, physical systems, and research meet.'],['Long-term curiosity','Document findings, keep useful components, and let evidence determine which ideas deserve to grow.']] }
 };
 const notes = {
  constraints: { category:'Engineering / Field note 01', title:'Start with constraints. Build with intention.', paragraphs:[['A useful first version answers a question.','Before choosing a framework or drawing the interface, identify what needs to be learned. A narrow prototype can reveal whether the idea is useful, whether the data is available, or whether the workflow makes sense.'],['Constraints are design material.','Time, hardware, attention, and reliability all shape a system. Making these limits explicit early helps the architecture serve its purpose. A fast, understandable tool often creates more room for progress than a broad system that is difficult to change.'],['Keep the learning loop short.','Choose one complete path through the problem. Build it, observe the outcome, and write down what changed your understanding. Expand when the evidence supports it.']] },
@@ -77,3 +77,21 @@ detail.addEventListener('cancel', e => { e.preventDefault(); closeDetail(); });
 detail.addEventListener('click', e => { if (e.target === detail) { const r = detail.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeDetail(); } });
 window.addEventListener('hashchange', renderRoute);
 renderRoute();
+
+const focusSystems = {
+  electra: ['01', 'ELECTRA', 'Commerce & repair systems', 'The counter. The workbench. One connected operation.'],
+  kubera: ['02', 'KUBERA', 'Quantitative systems', 'Market hypotheses. Measured risk. Repeatable research.'],
+  kaylan: ['03', 'KAYLAN', 'Personal AI director', 'Intent. Context. Coordinated action.'],
+  labs: ['04', 'VAYNE LABS', 'Experimental research', 'Unproven ideas. Focused experiments. New possibilities.']
+};
+$$('[data-system]').forEach(button => button.addEventListener('click', () => {
+  const key = button.dataset.system;
+  const [index, name, type, description] = focusSystems[key];
+  $$('[data-system]').forEach(b => { b.classList.toggle('selected', b === button); b.setAttribute('aria-pressed', String(b === button)); });
+  $('#focus-index').textContent = index + ' / 04';
+  $('#focus-name').textContent = name;
+  $('#focus-type').textContent = type;
+  $('#focus-description').textContent = description;
+  $('#focus-link').href = '#project/' + key;
+  if (!motionPaused) $('.focus-panel').animate([{opacity:.25, transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}], {duration:240,easing:'ease-out'});
+}));

@@ -1,6 +1,6 @@
 # Vayne Stark Industries — 2026
 
-A fresh, dependency-free studio website built for GitHub Pages. All HTML, CSS, JavaScript, and imagery were created for this version; no previous website source or assets were reused.
+A futuristic, dependency-free invention studio command interface built for GitHub Pages. All HTML, CSS, JavaScript, and imagery were created for this version; no previous website source or assets were reused.
 
 ## Publish
 
@@ -14,9 +14,9 @@ Run `python -m http.server 4173` in this directory, then open http://localhost:4
 
 ## Edit
 
-- `index.html`: studio sections, project cards, navigation, and contact destination.
+- `index.html`: command console, system selector, studio sections, project cards, navigation, and contact destination.
 - `styles.css`: layout, colors, typography, responsive rules, and motion.
-- `app.js`: project descriptions, journal articles, filters, accessible detail dialogs, and motion preference.
+- `app.js`: system selector, project descriptions, journal articles, filters, accessible detail dialogs, and motion preference.
 - `assets/`: original generated imagery, optimized to WebP. The source artwork was created specifically for this website.
 
 Project names and themes follow the supplied reference. Descriptions and the three journal notes are newly written editorial starting points, not verified product release claims. The contact link opens the owner's GitHub profile. No email address, customer claims, product demos, financial performance figures, or invented contact service is supplied.
