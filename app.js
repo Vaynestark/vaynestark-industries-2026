@@ -3,6 +3,7 @@ const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 let motionPaused = reducedMotion.matches;
+let focusTransition = null;
 try { motionPaused = reducedMotion.matches || localStorage.getItem('vayne-motion') === 'off'; } catch {}
 function setMotion(paused) {
   motionPaused = paused;
@@ -10,21 +11,28 @@ function setMotion(paused) {
   document.documentElement.classList.toggle('js-motion', !paused);
   $('#motion').setAttribute('aria-pressed', String(paused));
   $('#motion').title = paused ? 'Enable animations' : 'Pause animations';
+  $('#motion').setAttribute('aria-label', paused ? 'Enable decorative motion' : 'Pause decorative motion');
+  if (paused) focusTransition?.cancel();
   $('.motion-label').textContent = paused ? 'Motion off' : 'Motion on';
   $('.motion-icon').textContent = paused ? '▶' : 'II';
 }
 setMotion(motionPaused);
 $('#motion').addEventListener('click', () => { setMotion(!motionPaused); try { localStorage.setItem('vayne-motion', motionPaused ? 'off' : 'on'); } catch {} });
 reducedMotion.addEventListener('change', e => setMotion(e.matches));
-document.addEventListener('visibilitychange', () => document.body.classList.toggle('page-hidden', document.hidden));
+document.addEventListener('visibilitychange', () => {
+  document.body.classList.toggle('page-hidden', document.hidden);
+  if (document.hidden) focusTransition?.cancel();
+});
 const reveals = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); reveals.unobserve(entry.target); } }), { threshold: .08 });
 $$('.reveal').forEach(el => reveals.observe(el));
-const navObserver = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) $$('nav a').forEach(a => a.classList.toggle('active', a.hash === '#' + entry.target.id)); }), { rootMargin: '-15% 0px -55% 0px' });
+const navObserver = new IntersectionObserver(entries => entries.forEach(entry => { if (entry.isIntersecting) $$('nav a').forEach(a => { const active = a.hash === '#' + entry.target.id; a.classList.toggle('active', active); if (active) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); }); }), { rootMargin: '-15% 0px -55% 0px' });
 $$('main>section').forEach(el => navObserver.observe(el));
 function closeMenu() { $('nav').classList.remove('open'); $('.menu').setAttribute('aria-expanded', 'false'); $('.menu').setAttribute('aria-label', 'Open navigation'); }
 $('.menu').addEventListener('click', () => { const open = $('nav').classList.toggle('open'); $('.menu').setAttribute('aria-expanded', String(open)); $('.menu').setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation'); });
 $$('nav a').forEach(a => a.addEventListener('click', closeMenu));
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('nav').classList.contains('open')) { closeMenu(); $('.menu').focus(); } });
+document.addEventListener('click', e => { if (!e.target.closest('.header')) closeMenu(); });
+matchMedia('(min-width: 701px)').addEventListener('change', e => { if (e.matches) closeMenu(); });
 $$('[data-filter]').forEach(button => button.addEventListener('click', () => {
   $$('[data-filter]').forEach(b => { b.classList.toggle('selected', b === button); b.setAttribute('aria-pressed', String(b === button)); });
   let count = 0;
@@ -54,7 +62,7 @@ function renderRoute() {
   if (!item) { history.replaceState(null, '', '#projects'); if (detail.open) detail.close(); return; }
   if (!detail.open) { opener = document.activeElement; returnHash = previousHash && !previousHash.includes('/') ? previousHash : (match[1] === 'project' ? '#projects' : '#journal'); }
   if (match[1] === 'project') {
-    $('#detail-content').innerHTML = `<div class="detail-hero" style="--accent:${item.color};${item.image ? '' : 'background:radial-gradient(ellipse at 90% 30%,#123954,#080b0c 75%)'}">${item.image ? `<img src="assets/${item.image}" alt="" width="1800" height="1024">` : ''}<div><p class="eyebrow">Projects / ${item.kind}</p><h2 id="detail-title">${item.name}</h2><h3>${item.subtitle}</h3><p>${item.description}</p></div></div><div class="detail-body"><h3>The system in focus.</h3><div class="detail-features">${item.features.map(([title,text]) => `<section><h4>${title}</h4><p>${text}</p></section>`).join('')}</div><div class="detail-foot"><span>Explore the thinking. Follow the work.</span><a href="https://github.com/Vaynestark" target="_blank" rel="noopener">Vayne Stark on GitHub</a></div></div>`;
+    $('#detail-content').innerHTML = `<div class="detail-hero" style="--accent:${item.color};${item.image ? '' : 'background:radial-gradient(ellipse at 90% 30%,#123954,#080b0c 75%)'}">${item.image ? `<img src="assets/${item.image}" alt="" width="1800" height="1024">` : `<div class="detail-chart" aria-hidden="true">${$('.kubera .market-visual').outerHTML}</div>`}<div><p class="eyebrow">Projects / ${item.kind}</p><h2 id="detail-title">${item.name}</h2><h3>${item.subtitle}</h3><p>${item.description}</p></div></div><div class="detail-body"><h3>The system in focus.</h3><div class="detail-features">${item.features.map(([title,text], index) => `<section><span class="feature-index">0${index + 1}</span><h4>${title}</h4><p>${text}</p></section>`).join('')}</div><nav class="detail-switcher" aria-label="Explore another system">${Object.entries(projects).map(([key, project]) => `<a href="#project/${key}" ${key === match[2] ? 'aria-current="page"' : ''}>${project.name}</a>`).join('')}</nav><div class="detail-foot"><span>Explore the thinking. Follow the work.</span><a href="https://github.com/Vaynestark" target="_blank" rel="noopener">Vayne Stark on GitHub</a></div></div>`;
     document.title = `${item.name} — Vayne Stark Industries`;
   } else {
     $('#detail-content').innerHTML = `<article class="article"><p class="eyebrow">${item.category}</p><h2 id="detail-title">${item.title}</h2>${item.paragraphs.map(([title,text]) => `<h3>${title}</h3><p>${text}</p>`).join('')}<p class="article-end">Vayne Stark Industries / Studio journal</p></article>`;
@@ -75,6 +83,13 @@ function closeDetail() {
 $('#close-detail').addEventListener('click', closeDetail);
 detail.addEventListener('cancel', e => { e.preventDefault(); closeDetail(); });
 detail.addEventListener('click', e => { if (e.target === detail) { const r = detail.getBoundingClientRect(); if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) closeDetail(); } });
+detail.addEventListener('click', e => {
+  const link = e.target.closest('.detail-switcher a');
+  if (!link) return;
+  e.preventDefault();
+  history.replaceState(null, '', link.hash);
+  renderRoute();
+});
 window.addEventListener('hashchange', renderRoute);
 renderRoute();
 
@@ -85,6 +100,7 @@ const focusSystems = {
   labs: ['04', 'VAYNE LABS', 'Experimental research', 'Unproven ideas. Focused experiments. New possibilities.']
 };
 $$('[data-system]').forEach(button => button.addEventListener('click', () => {
+  if (button.getAttribute('aria-pressed') === 'true') return;
   const key = button.dataset.system;
   const [index, name, type, description] = focusSystems[key];
   $$('[data-system]').forEach(b => { b.classList.toggle('selected', b === button); b.setAttribute('aria-pressed', String(b === button)); });
@@ -93,5 +109,16 @@ $$('[data-system]').forEach(button => button.addEventListener('click', () => {
   $('#focus-type').textContent = type;
   $('#focus-description').textContent = description;
   $('#focus-link').href = '#project/' + key;
-  if (!motionPaused) $('.focus-panel').animate([{opacity:.25, transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}], {duration:240,easing:'ease-out'});
+  focusTransition?.cancel();
+  if (!motionPaused) focusTransition = $('.focus-panel').animate([{opacity:.25, transform:'translateY(5px)'},{opacity:1,transform:'translateY(0)'}], {duration:240,easing:'ease-out'});
 }));
+
+$('.project-dock').addEventListener('keydown', e => {
+  const items = $$('[data-system]');
+  const current = items.indexOf(document.activeElement);
+  if (current < 0 || !['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) return;
+  e.preventDefault();
+  const next = e.key === 'Home' ? 0 : e.key === 'End' ? items.length - 1 : (current + (e.key === 'ArrowRight' ? 1 : -1) + items.length) % items.length;
+  items[next].focus();
+  items[next].click();
+});

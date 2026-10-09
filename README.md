@@ -10,7 +10,7 @@ Expected URL after GitHub completes deployment: https://vaynestark.github.io/vay
 
 ## Local preview
 
-Run `python -m http.server 4173` in this directory, then open http://localhost:4173. No installation, build, backend, or external CDN is needed.
+Run `python -m http.server 4173` in this directory, then open http://localhost:4173. No installation, build, backend, or external CDN is needed. Typography, icons, and images are all self-hosted.
 
 ## Edit
 
@@ -23,11 +23,11 @@ Project names and themes follow the supplied reference. Descriptions and the thr
 
 ## Performance choices
 
-- Zero runtime dependencies, font downloads, analytics, third-party requests, video, WebGL, canvas, or continuous JavaScript animation loops.
+- Zero runtime dependencies, analytics, third-party requests, video, WebGL, canvas, or continuous JavaScript animation loops. One Latin-subset Space Grotesk variable font is served locally from GitHub Pages; its SIL Open Font License is included in assets/fonts/OFL.txt.
 - Entrance and reveal animations use transforms and opacity, then finish. Offscreen reveals are observed once and disconnected.
 - Native scrolling, lazy-loaded project images, responsive hero imagery, and fixed image dimensions.
 - A persistent motion switch, operating-system reduced-motion support, and hidden-tab animation pausing.
-- Native HTML dialog provides focus trapping; Escape closes details and focus returns to the opener.
+- Native HTML dialog provides focus trapping; Escape closes details and focus returns to the opener. Project briefs include links to the other systems. The system dock supports Left/Right, Home, and End keys. Motion pauses cancel an in-flight panel transition.
 - Direct project and journal links use hashes so they work on GitHub Pages without rewrite rules.
 
 See `DESIGN-RESEARCH.md` for the research and design decisions.

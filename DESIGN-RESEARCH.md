@@ -18,3 +18,9 @@ The revised design is a futuristic invention command interface: a cyan-lit sculp
 A compressed futuristic laboratory still provides the scene's visual complexity. A short, finite image entrance replaces real-time 3D rendering. A scan line crosses the hero once and content reveals stop after one entrance. System selection triggers a 240 ms panel transition only on interaction. There is no autoplay video, WebGL scene, pointer-tracking loop, synthetic cursor, scroll hijacking, or recurring JavaScript timer.
 
 Performance results in `QA.md` are local browser checks, not measurements of real visitor devices. Different network and hardware conditions can produce different results.
+
+## Refinement — October 9, 2026
+
+The refinement groups the system brief and selector into one console, clears overlays away from the main artwork, uses a self-hosted Space Grotesk font, and makes navigation persistent. Larger type, stronger text contrast, consistent line icons, and responsive content-flow cards improve scanning and text enlargement. Project briefs now include numbered capabilities and navigation between systems.
+
+Typeface source: [Space Grotesk in Google Fonts on GitHub](https://github.com/google/fonts/tree/main/ofl/spacegrotesk). The font is distributed under the SIL Open Font License, included in the repository. A Latin subset is served directly from GitHub Pages.
